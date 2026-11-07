@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Waste-fed fuel cell: the concept</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f1f4ec;--ink:#12261f;--mute:#4f655c;--rule:#c9d4c6;--accent:#d98a00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1613;--ink:#e4efe8;--mute:#9bb3a9;--rule:#24382f;--accent:#ffc83d}}
+:root[data-theme="dark"]{--bg:#0b1613;--ink:#e4efe8;--mute:#9bb3a9;--rule:#24382f;--accent:#ffc83d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Sora,system-ui,sans-serif;line-height:1.55}
+main{max-width:66rem;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:clamp(1.9rem,5.5vw,3.3rem);font-weight:800;line-height:1.03;letter-spacing:-.03em;margin:0 0 .6rem;max-width:20ch}
+.lede{color:var(--mute);margin:0 0 1.25rem;max-width:44rem}
+.stage{background:#0d1b18;border-radius:1rem;padding:.5rem;overflow-x:auto;border:1px solid var(--rule)}
+.stage svg{display:block;width:100%;min-width:44rem;height:auto}
+svg text{font-family:inherit;fill:#cfe6dc;font-size:13px}
+.box{fill:none;stroke:#cfe6dc;stroke-width:2.2}
+.pipe{stroke:#4b6a5f;stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wire{stroke:#cfe6dc;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.flow{stroke:#ffd23f;stroke-width:3.5;fill:none;stroke-dasharray:2 12;stroke-linecap:round;stroke-linejoin:round;animation:fl .7s linear infinite}
+@keyframes fl{to{stroke-dashoffset:-14}}
+.grp{opacity:.2;transition:opacity .4s}
+.grp.on{opacity:1}
+.gear{transform-box:fill-box;transform-origin:center;animation:spin 2.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.info{margin:1.1rem 0 .5rem;min-height:7.5rem}
+.info b{display:block;font-size:1.4rem;font-weight:800}
+.info p{margin:.2rem 0 .5rem;color:var(--mute);max-width:46rem}
+.eq{display:inline-block;font-weight:600;border-left:4px solid var(--accent);padding:.1rem .7rem}
+.ctl{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+button{font:inherit;font-weight:600;color:var(--ink);background:transparent;border:2px solid var(--ink);border-radius:999px;padding:.4rem .9rem;cursor:pointer}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;color:var(--mute);font-size:.9rem;margin:.5rem 0 0}
+.legend i{display:inline-block;width:.8rem;height:.8rem;margin-right:.4rem;vertical-align:-.1rem;border-radius:50%}
+.notes{margin-top:2rem;border-top:2px solid var(--ink);padding-top:1rem}
+.notes h2{font-size:1.2rem;margin:0 0 .5rem}
+.notes ul{margin:0;padding-left:1.1rem;color:var(--mute);max-width:46rem}
+.notes li{margin-bottom:.5rem}
+.notes strong{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.gear,.flow{animation:none}.p{display:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>A fuel cell that runs on wet waste</h1>
+<p class="lede">Concept walkthrough: waste is ground and split, the liquid feeds a carbon anode, ions cross a membrane, and air supplies the other half of the reaction.</p>
+
+<div class="stage">
+<svg viewBox="0 0 1000 120" role="img" aria-label="Pipeline: wet waste, grinder, separator; solids go to compost, liquid goes to extraction and then the fuel cell.">
+<g class="grp" data-s="1">
+<rect class="box" x="20" y="35" width="130" height="50" rx="8"/><text x="85" y="65" text-anchor="middle">Wet waste</text>
+<rect class="box" x="190" y="35" width="130" height="50" rx="8"/><text x="255" y="65" text-anchor="middle">Grinder</text>
+<rect class="box" x="360" y="35" width="130" height="50" rx="8"/><text x="425" y="65" text-anchor="middle">Separator</text>
+<path class="wire" d="M150 60 H190 M320 60 H360 M490 60 H520 V28 H560 M490 60 H520 V92 H560 M720 92 H780"/>
+<rect class="box" x="560" y="8" width="160" height="40" rx="8"/><text x="640" y="33" text-anchor="middle">Solids to compost</text>
+<rect class="box" x="560" y="72" width="160" height="40" rx="8"/><text x="640" y="97" text-anchor="middle">Liquid extraction</text>
+<rect class="box" x="780" y="72" width="190" height="40" rx="8"/><text x="875" y="97" text-anchor="middle">Fuel cell (below)</text>
+</g>
+<g id="pp1"></g>
+</svg>
+
+<svg viewBox="0 0 1000 400" role="img" aria-label="Cross-section of the fuel cell: carbon anode chamber, cation-exchange membrane, air cathode chamber, an external circuit with an LED, and pumps feeding both sides.">
+<defs>
+<pattern id="felt" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6 L6 0" stroke="#8aa198" stroke-width="1"/></pattern>
+<pattern id="pore" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.3" fill="#9ec6dc"/></pattern>
+</defs>
+<rect x="200" y="70" width="300" height="220" fill="#f0932b" fill-opacity=".25"/>
+<rect x="506" y="70" width="300" height="220" fill="#6ec1ff" fill-opacity=".1"/>
+<path class="box" d="M200 70 V290 H500 V70 M506 70 V290 H806"/>
+<text x="206" y="62">Anode chamber: waste-derived liquid</text>
+<text x="800" y="62" text-anchor="end">Cathode chamber</text>
+
+<g class="grp" data-s="2">
+<rect x="215" y="90" width="40" height="180" fill="#2b3a35"/><rect x="215" y="90" width="40" height="180" fill="url(#felt)" stroke="#cfe6dc" stroke-width="2"/>
+<text x="266" y="110">carbon anode (−)</text>
+<g id="pp2"></g>
+</g>
+
+<g class="grp" data-s="3">
+<rect x="494" y="70" width="12" height="220" fill="#cfe6dc" fill-opacity=".35" stroke="#cfe6dc" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="455" y="312">cation-exchange membrane</text>
+<g id="pp3"></g>
+</g>
+
+<g class="grp" data-s="4">
+<rect x="766" y="90" width="40" height="180" fill="#1d3340"/><rect x="766" y="90" width="40" height="180" fill="url(#pore)" stroke="#cfe6dc" stroke-width="2"/>
+<text x="756" y="110" text-anchor="end">air cathode (+)</text>
+<text x="885" y="112" text-anchor="middle">Air (O₂)</text>
+<path class="wire" d="M235 90 V35 H485 M515 35 H786 V90"/>
+<circle id="glow" cx="500" cy="35" r="24" fill="#ffd23f" opacity=".35"/>
+<circle cx="500" cy="35" r="14" fill="#ffd23f" stroke="#cfe6dc" stroke-width="2.2"/>
+<text x="500" y="14" text-anchor="middle">LED (load)</text>
+<g id="pp4"></g>
+</g>
+
+<g class="grp" data-s="5">
+<rect class="box" x="40" y="318" width="110" height="50" rx="8"/><text x="95" y="340" text-anchor="middle">Liquid from</text><text x="95" y="357" text-anchor="middle">separator</text>
+<path class="pipe" d="M150 343 H300 V290"/><path class="pipe" d="M440 290 V343 H560"/>
+<circle class="box gear" cx="225" cy="343" r="14" stroke-dasharray="5 4" stroke-width="6"/>
+<text x="570" y="347">spent liquid out</text>
+<path class="pipe" d="M700 290 V365 H900"/>
+<circle class="box gear" cx="800" cy="365" r="14" stroke-dasharray="5 4" stroke-width="6"/>
+<text x="706" y="390">cathode-side liquid loop</text>
+<g id="pp5"></g>
+</g>
+</svg>
+
+<svg viewBox="0 0 1000 140" role="img" aria-label="Three fuel cells wired in series so their voltages add, powering one LED.">
+<g class="grp" data-s="5">
+<g id="stack"></g>
+<text x="500" y="134" text-anchor="middle">Cells in series: voltages add up. Each cell gets its own liquid feed.</text>
+</g>
+</svg>
+</div>
+
+<div class="legend">
+<span><i style="background:#f0932b;border-radius:2px"></i>organic compound</span>
+<span><i style="background:#ff6b6b"></i>H⁺ ion</span>
+<span><i style="background:#ffd23f"></i>electron</span>
+<span><i style="background:#6ec1ff"></i>oxygen (O₂)</span>
+<span><i style="background:#bfe6ff"></i>water</span>
+</div>
+
+<div class="info" aria-live="polite"><b id="t"></b><p id="d"></p><span class="eq" id="e"></span></div>
+<div class="ctl" id="ctl" role="group" aria-label="Steps"></div>
+
+<section class="notes">
+<h2>Concept notes: what makes each part work</h2>
+<ul>
+<li><strong>Anode:</strong> the waste liquid must contain compounds that give up electrons easily. Polyphenol-rich waste such as tea leaves and some peels is the strongest candidate.</li>
+<li><strong>Cathode:</strong> oxygen reduction needs a catalytic surface, so the air cathode is a treated porous electrode rather than bare carbon.</li>
+<li><strong>Membrane:</strong> a cation-exchange membrane passes positive ions but blocks electrons and keeps the two liquids apart, so electrons must take the wire.</li>
+<li><strong>Series cells:</strong> each cell has a separate liquid feed so current cannot leak through shared liquid between cells.</li>
+</ul>
+</section>
+</main>
+
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg";
+function $(i){return document.getElementById(i)}
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function mover(parent,kind,path,dur,begin){
+  var g=el("g",{class:"p"},parent);
+  if(kind==="mol")el("polygon",{points:"9,0 4.5,7.8 -4.5,7.8 -9,0 -4.5,-7.8 4.5,-7.8",fill:"#f0932b",stroke:"#12261f","stroke-width":1.5},g);
+  if(kind==="hp"){el("circle",{r:6,fill:"#ff6b6b"},g);var t=el("text",{"text-anchor":"middle",y:4,style:"font-size:10px;font-weight:800;fill:#fff"},g);t.textContent="+"}
+  if(kind==="o2"){el("circle",{cx:-4,r:4.5,fill:"#6ec1ff"},g);el("circle",{cx:4,r:4.5,fill:"#6ec1ff"},g)}
+  if(kind==="el")el("circle",{r:3.5,fill:"#ffd23f"},g);
+  if(kind==="h2o")el("circle",{r:5,fill:"#bfe6ff"},g);
+  if(kind==="liq")el("circle",{r:3.5,fill:"#f0932b"},g);
+  if(kind==="sol")el("circle",{r:4,fill:"#8b6239"},g);
+  el("animateMotion",{path:path,dur:dur+"s",begin:begin+"s",repeatCount:"indefinite"},g);
+  el("animate",{attributeName:"opacity",values:"0;1;1;0",keyTimes:"0;.1;.85;1",dur:dur+"s",begin:begin+"s",repeatCount:"indefinite"},g);
+}
+[120,170,220].forEach(function(y,i){
+  mover($("pp2"),"mol","M410 "+y+" H266",5,i*1.6);
+  mover($("pp3"),"hp","M266 "+(y+8)+" H760",5,i*1.6+.8);
+  mover($("pp4"),"o2","M950 "+(y-5)+" H812",4,i*1.3);
+  mover($("pp4"),"h2o","M762 "+(y+14)+" H690",5,i*1.7+1);
+});
+for(var i=0;i<6;i++)mover($("pp4"),"el","M235 90 V35 H786 V90",4,i*.67);
+for(i=0;i<5;i++){
+  mover($("pp5"),"liq","M150 343 H300 V290",3,i*.6);
+  mover($("pp5"),"liq","M700 290 V365 H900",4,i*.8);
+}
+for(i=0;i<5;i++){
+  mover($("pp1"),"liq","M150 60 H520 V92 H780",5,i);
+}
+for(i=0;i<3;i++)mover($("pp1"),"sol","M490 60 H520 V28 H560",2.5,i*.8);
+
+var sk=$("stack");
+[100,310,520].forEach(function(x,i){
+  el("rect",{x:x,y:40,width:70,height:50,fill:"#f0932b","fill-opacity":".3",stroke:"#cfe6dc","stroke-width":2},sk);
+  el("rect",{x:x+70,y:40,width:70,height:50,fill:"#6ec1ff","fill-opacity":".15",stroke:"#cfe6dc","stroke-width":2},sk);
+  el("path",{d:"M"+(x+70)+" 40 V90",stroke:"#cfe6dc","stroke-width":3,"stroke-dasharray":"4 3"},sk);
+  el("rect",{x:x+16,y:45,width:6,height:40,fill:"#2b3a35",stroke:"#cfe6dc","stroke-width":1.2},sk);
+  el("rect",{x:x+118,y:45,width:6,height:40,fill:"#1d3340",stroke:"#cfe6dc","stroke-width":1.2},sk);
+  var t=el("text",{x:x+70,y:32,"text-anchor":"middle"},sk);t.textContent="cell "+(i+1);
+});
+var ws=["M119 40 V15 H0","M220 40 V15 H330 V40","M430 40 V15 H540 V40","M640 40 V15 H850 V47","M119 90 V112 H850 V83"];
+ws[0]="M119 45 V45";
+ws.slice(1).forEach(function(d){el("path",{class:"wire",d:d},sk);el("path",{class:"flow",d:d},sk)});
+el("circle",{cx:850,cy:65,r:18,fill:"#ffd23f",stroke:"#cfe6dc","stroke-width":2.2},sk);
+var lb=el("text",{x:850,y:32,"text-anchor":"middle"},sk);lb.textContent="LED";
+
+var steps=[
+["Split the waste","Wet waste is ground, then separated. The solids go to composting and become fertiliser. The liquid is processed to extract the organic compounds that can give up electrons.","solids → compost · liquid → extract for the cell"],
+["Anode: waste gives up electrons","The extracted liquid is pumped into the anode chamber, where a carbon felt electrode has a huge surface for reactions. Organic compounds in the liquid are oxidised there, releasing electrons and H⁺ ions.","organic compound → oxidised products + H⁺ + e⁻"],
+["Membrane: ions cross, electrons cannot","A cation-exchange membrane lets positive ions such as H⁺ move into the cathode chamber but blocks electrons and keeps the liquids from mixing. This forces the electrons to take the external wire.","H⁺ passes through · e⁻ blocked"],
+["Cathode and circuit: air completes it","Electrons travel through the wire, lighting the LED on the way. At the air cathode they meet oxygen from the air and the H⁺ that crossed the membrane, forming water. Oxygen from air means no chemical needs to be supplied on this side.","O₂ + 4H⁺ + 4e⁻ → 2H₂O"],
+["Flow and stacking: scale up the output","Small pumps keep fresh liquid arriving and spent liquid leaving, so the reaction doesn’t stall. One cell gives a low voltage, so several cells are wired in series and their voltages add.","V total = V₁ + V₂ + V₃"]
+];
+var cur=0,timer=null,playing=true,ctl=$("ctl");
+var groups=[].slice.call(document.querySelectorAll(".grp"));
+var btns=steps.map(function(s,i){var b=document.createElement("button");b.textContent=(i+1)+". "+["Split","Anode","Membrane","Cathode","Flow"][i];b.onclick=function(){show(i);play(false)};ctl.appendChild(b);return b});
+var pb=document.createElement("button");pb.textContent="Pause";ctl.appendChild(pb);
+function show(i){
+  cur=i;var s=String(i+1);
+  groups.forEach(function(g){g.classList.toggle("on",g.getAttribute("data-s").split(",").indexOf(s)>-1)});
+  btns.forEach(function(b,k){b.setAttribute("aria-pressed",k===i)});
+  $("t").textContent=steps[i][0];$("d").textContent=steps[i][1];$("e").textContent=steps[i][2];
+}
+function play(on){playing=on;pb.textContent=on?"Pause":"Play";clearInterval(timer);if(on)timer=setInterval(function(){show((cur+1)%steps.length)},6500)}
+pb.onclick=function(){play(!playing)};
+show(0);play(true);
+})();
+</script>
+</body>
+</html>
